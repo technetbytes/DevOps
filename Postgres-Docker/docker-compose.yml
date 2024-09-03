@@ -1,3 +1,4 @@
+# docker-compose file for Postgres with PgAdmin
 version: "3.8"
 services:
   db:
