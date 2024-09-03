@@ -7,8 +7,8 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: user-name
-      POSTGRES_PASSWORD: strong-password
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass123
     volumes:
       - local_pgdata:/var/lib/postgresql/data
   pgadmin:
@@ -16,10 +16,10 @@ services:
     container_name: pgadmin4_container
     restart: always
     ports:
-      - "8888:80"
+      - "8882:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: user-name@domain-name.com
-      PGADMIN_DEFAULT_PASSWORD: strong-password
+      PGADMIN_DEFAULT_EMAIL: saqibullah@msn.com
+      PGADMIN_DEFAULT_PASSWORD: pass123
     volumes:
       - pgadmin-data:/var/lib/pgadmin
 
