@@ -1,0 +1,18 @@
+version: "3"
+services:
+  telemetryserver:
+    container_name: telemetryserver
+    image: prometheus-nodeapp:latest
+    ports:
+      - "3000:3000"
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes: 
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+    privileged: true
+    depends_on:
+      - telemetryserver
