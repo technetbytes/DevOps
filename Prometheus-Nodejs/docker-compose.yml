@@ -13,6 +13,17 @@ services:
       - "9090:9090"
     volumes: 
       - "./prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+      - ./rules.yml:/etc/prometheus/rules.yml
     privileged: true
     depends_on:
       - telemetryserver
+   
+  alertmanager:
+    image: prom/alertmanager
+    restart: unless-stopped
+    ports:
+      - "9093:9093"
+
+    volumes:
+      - ./alertmanager/alertmanager.yml:/alertmanager.yml
+    command: --config.file=/alertmanager.yml --log.level=debug

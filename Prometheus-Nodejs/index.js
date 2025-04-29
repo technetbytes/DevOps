@@ -4,11 +4,16 @@ import fastifyCookie from "@fastify/cookie";
 import fastifySession from "@fastify/session";
 import formbody from "@fastify/formbody";
 import metricsPlugin from "fastify-metrics";
-import { register, Counter, Gauge, Histogram } from "prom-client";
+import { register, Counter, Gauge, Histogram, Summary} from "prom-client";
 import { performance } from "perf_hooks";
 
 const fastify = Fastify({ logger: true });
-await fastify.register(metricsPlugin, { endpoint: "/metrics" });
+
+fastify.get('/metrics', async (request, reply) => {
+  reply.header('Content-Type', register.contentType);
+  return await register.metrics();
+});
+
 
 fastify.register(fastifyCookie);
 fastify.register(fastifySession, {
@@ -39,12 +44,29 @@ const dbQueryDurationHistogram = new Histogram({
   labelNames: ["method", "route"],
   buckets: [0.005, 0.01, 0.025, 0.05, 0.075, 0.1],
 });
+const responseSizeSummary = new Summary({
+  name: "http_response_size_bytes",
+  help: "Summary of HTTP response sizes in bytes",
+  labelNames: ["method", "route"],
+});
 
 // In-memory user store for demo purposes
 const users = {
   user1: { username: "user1", password: "password1" },
   user2: { username: "user2", password: "password2" },
 };
+
+// Middleware to track response size for '/' endpoint only
+const trackResponseSize = async (request, reply, payload) => {
+  if (payload && request.routerPath === "/") {
+    const responseSizeBytes = JSON.stringify(payload).length;
+    responseSizeSummary
+      .labels(request.method, request.routerPath)
+      .observe(responseSizeBytes);
+  }
+};
+// Apply middleware to track response size
+fastify.addHook("onSend", trackResponseSize);
 
 // Handle login form submissions
 fastify.post("/login", async (request, reply) => {
