@@ -27,3 +27,23 @@ services:
     volumes:
       - ./alertmanager/alertmanager.yml:/alertmanager.yml
     command: --config.file=/alertmanager.yml --log.level=debug
+    
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    ports:
+      - "3030:3000"
+    environment:
+          - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+          - DS_PROMETHEUS=prometheus
+    volumes: 
+        - "grafana-data:/var/lib/grafana"
+        - "./datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml"
+        - "./dashboard.json:/var/lib/grafana/dashboards/dashboard.json"
+        - "./default.yml/default.yaml:/etc/grafana/provisioning/dashboards/default.yaml"
+    privileged: true
+    depends_on:
+      - prometheus
+
+volumes:
+  grafana-data:
