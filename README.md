@@ -1,2 +1,2 @@
 # DevOps
-Different type of DevOps Scripts
+Different type of DevOps Projects & Scripts
