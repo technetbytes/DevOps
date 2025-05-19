@@ -1,0 +1,12 @@
+{
+  "name": "nodejs-microservice",
+  "version": "1.0.0",
+  "description": "Node.js microservice with multiple paths",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

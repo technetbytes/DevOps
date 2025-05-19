@@ -6,8 +6,8 @@ scrape_configs:
   - job_name: "prometheus"
     # metrics_path defaults to '/metrics'
     static_configs:
-      - targets: ["172.27.211.237:9090"]
+      - targets: ["host.docker.internal:9090"]
 
   - job_name: "cadvisor"
     static_configs:
-      - targets: ["172.27.211.237:8080"]
+      - targets: ["host.docker.internal:8080"]
